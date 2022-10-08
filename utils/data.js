@@ -1,18 +1,45 @@
+import bcrypt from 'bcryptjs';
+
 const data ={ 
 
+
+
+    users:[
+
+        {
+            name: 'Jhon',
+            email:'admin@vp.com',
+            password: bcrypt.hashSync('123456'),
+            isAdmin: true,
+
+
+        },
+
+        
+        {
+            name: 'Jane',
+            email:'notadmin@vp.com',
+            password: bcrypt.hashSync('123456789'),
+            isAdmin: false,
+
+
+        },
+    ],
     products:[
         
         {
 
-            name:'potato',
+            name:'potatowww',
+            subname:'allo',
             slug:'potataao',
             category:'Vegetables',
-            image:'/tomathyb.jpg',
-            priceperkg: 20,
+            subcategory:'Seasonal',
+            image:'/tomat.jpg',
+            priceperunit: 20,
             price: 100,
             dqty: '5kg',
             description:'frecch fries',
-            countInStock:'10000',
+            countInStock:10000,
 
         },
 
@@ -21,12 +48,13 @@ const data ={
             name:'potato',
             slug:'potato',
             category:'Vegetables',
+            subcategory:'Seasonal',
             image:'/logo1.jpg',
-            priceperkg: 20,
+            priceperunit: 20,
             price: 100,
             dqty: '5kg',
             description:'frecch fries',
-            countInStock:'10000',
+            countInStock:10000,
 
         },
 
@@ -35,67 +63,72 @@ const data ={
         
         {
 
-            name:'potato',
-            slug:'potato',
+            name:'potatokkjjkjlk;j',
+            slug:'potatokljk',
             category:'Vegetables',
+            subcategory:'Seasonal',
             image:'/tomathyb.jpg',
-            priceperkg: 20,
+            priceperunit: 20,
             price: 100,
             dqty: '5kg',
             description:'frecch fries',
-            countInStock:'10000',
+            countInStock:10000,
 
         },
         {
 
-            name:'potato',
-            slug:'potato',
+            name:'potatoafsdz',
+            slug:'zczvzdvadv',
             category:'Vegetables',
+            subcategory:'Seasonal',
             image:'/tomathyb.jpg',
-            priceperkg: 20,
+            priceperunit: 20,
             price: 100,
             dqty: '5kg',
             description:'frecch fries',
-            countInStock:'10000',
+            countInStock:10000,
 
         },
         {
 
-            name:'potato',
-            slug:'potato',
+            name:'afsadzx',
+            slug:'potatoxzvzvar',
             category:'Vegetables',
+            subcategory:'Seasonal',
             image:'/tomathyb.jpg',
-            priceperkg: 20,
+            priceperunit: 20,
             price: 100,
             dqty: '5kg',
             description:'frecch fries',
-            countInStock:'10000',
+            countInStock:10000,
 
         },
         {
 
-            name:'potato',
-            slug:'potato',
+            name:'potatosdfafda',
+            slug:'potatowerqwexsaewf',
             category:'Vegetables',
+            subcategory:'Seasonal',
             image:'/tomathyb.jpg',
-            priceperkg: 20,
+            priceperunit: 20,
             price: 100,
             dqty: '5kg',
             description:'frecch fries',
-            countInStock:'10000',
+            countInStock:10000,
 
         },
         {
 
-            name:'potato',
-            slug:'potato',
+            name:'potatoada',
+            slug:'potatoafadsfad',
             category:'Vegetables',
+            subcategory:'Seasonal',
             image:'/tomathyb.jpg',
-            priceperkg: 20,
+            priceperunit: 20,
             price: 100,
             dqty: '5kg',
             description:'frecch fries',
-            countInStock:'10000',
+            countInStock:1000,
 
         },
 

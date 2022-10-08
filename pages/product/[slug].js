@@ -1,93 +1,108 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useContext } from 'react'
 import Layout from '../../components/Layout'
 import { useRouter } from 'next/router';
-import data from '../../utils/data';
+import axios from 'axios'
+import { toast } from 'react-toastify';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Store } from '../../utils/Store';
+import { HiShoppingBag } from 'react-icons/hi';
+import { MdKeyboardBackspace } from 'react-icons/md';
+import db from '../../utils/db';
+import Product from '../../modles/Product';
 
 
 
-export default function ProductScreen() {
-  const {state,dispatch} = useContext(Store);
+export default function ProductScreen(props) {
+  const { product } = props;
+  const { state, dispatch } = useContext(Store);
+  const router = useRouter();
 
-  const { query } = useRouter();
-  const { slug } = query;
-  const product = data.products.find(x => x.slug === slug);
   if (!product) {
 
-    return <div>
-      Product not found
-    </div>
+    return <Layout title='Product not found     farmfreshz.com FRESH FRUITS , VEGETABLE ,DAIRY PRODUCTS many more to come.  We are a group of more than 2000 + farmers serving our customers daily. We deliver our fresh produce to our customers immediately after harvest , so that quality and freshness remain intact. Only purpose of farmfresh.com is welfare of farmers and serving our community'>
+      <div className='text-red-600 font-mono font-bold text-2xl text-center mt-20 '>Product not found !!! </div>
+    </Layout>
   }
 
-  const addToCartHandler =() =>{
-    const existItem = state.cart.cartItems.find((x) => x.slug ===slug);
-    const quantity =existItem ? existItem.quantity + 1: 1;
+  const addToCartHandler = async () => {
+    const existItem = state.cart.cartItems.find((x) => x.slug === product.slug);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/products/${product._id}`);
 
-    dispatch({type:'CART_ADD_ITEM', payload: {...product, quantity}})
+    if (data.countInStock < quantity) {
+      return toast.error('Sorry. Product is out of stock');
+    }
 
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
+    router.push('/cart');
   };
-
-  return <Layout title={product.name} >
-    <div className='py-2'>
-      <Link href="/">back to products</Link>
-
-      <div className=" p-4 grid md: grid-cols-4 md:gap-2">
-
-        <div className='md:col-span-2 shadow-2xl shadow-green-300 p-2 rounded-lg '>
-          <Image src={product.image}
-            alt={product.name}
-            width={640}
-            height={640}
-            layout='responsive'
-
-          />
-
-        </div>
-        <div>
-
-          <ul className='mx-6 font-base'>
-            <li>
-              <h1 className='text-blue-900 text-2xl font-bold mb-4 '>{product.name}</h1>
+  return <Layout title={product.name}>
 
 
-            </li>
 
-            <li>Category: {product.category}</li>
-            <li>Price per kg : ₹{product.priceperkg}</li>
-            <li>Minimum  deliverable quantity:{product.dqty}</li>
+    <div className="text-gray-800 body-font overflow-hidden">
+    <Link href="/"><span><MdKeyboardBackspace className ='font-bold text-2xl text-green-800'/></span></Link>
+      <div className="container px-5 py-24 mx-auto">
+        
+        <div className="lg:w-4/5 mx-auto flex flex-wrap ">
+          <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded" src={product.image} />
+          < div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+
+            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.name}</h1>
+            <h2 className="text-sm title-font text-gray-800 tracking-widest">{product.subname}</h2>
+            <ul className=' mt-5 font-base'>
+              <li>
 
 
-            <li className='mt-6'>{product.description}</li>
-          </ul>
-        </div>
-        <div>
-          <div className='card p-4 '>
-            <div className='mb-2 flex justify-between'>
-              <div className='font-semibold text-lg'>Price </div>
-              <div className='text-green-700 font-semibold text-lg' >₹ {product.price}</div>
-            </div>
-            <div className = 'mb-2 flex justify-between font-base'>
-              <div>Status</div>
-             <div>{product.countInStock > 0 ? 'In Stock' : 'Unavailable'}</div>
+
+              </li>
+
+              <li>Category: {product.category}</li>
+              <li>Price per kg : ₹{product.priceperunit}</li>
+              <li>Minimum  deliverable quantity:{product.dqty}</li>
+
+
+              <li className='mt-6'>{product.description}</li>
+            </ul>
+
+            <div className="flex">
+              <div className='font-medium text-2xl'>Price </div>
+              <span className="font-medium text-2xl text-gray-900">&nbsp;₹ {product.price}</span>
+              <button onClick={addToCartHandler} className=" flex justify-center  ml-auto   bg-green-500 hover:bg-green-300 active:bg-green-500 text-blue-900 font-semibold py-1 px-4 border-b-4 border-emerald-600 hover:border-emrald-800 rounded-lg">
+                <HiShoppingBag className='mt-1 mr-1 text-lg font-semibold' /> Add to cart
+              </button>
 
             </div>
-            <button  onClick ={addToCartHandler} className= "   w-full  bg-green-300 hover:bg-green-400 active:bg-green-500 text-green-900 font-semibold py-1 px-4 border-b-4 border-emerald-500 hover:border-emrald-600 rounded-xl">
-              Add to cart
-            </button>
+
+            
+            <div>Status:  {product.countInStock > 0 ? 'In Stock' : 'Unavailable'}</div>
 
 
 
 
           </div>
+
         </div>
-
       </div>
-
     </div>
+
+
   </Layout>
+
 
 }
 
+export async function getServerSideProps(context) {
+  const { params } = context;
+  const { slug } = params;
 
+  await db.connect();
+  const product = await Product.findOne({ slug }).lean();
+  await db.disconnect();
+  return {
+    props: {
+      product: product ? db.convertDocToObj(product) : null,
+    },
+  };
+}
